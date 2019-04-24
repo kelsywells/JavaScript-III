@@ -19,10 +19,10 @@ function GameObject(attributes) {
   this.createdAt= attributes.createdAt;
   this.name= attributes.name;
   this.dimensions= attributes.dimensions;
-  this.destroy= function(removed) {
-    return ${this.name} was removed from the game.
-  }
 }
+
+GameObject.prototype.destroy= function() {
+  return `${this.name} was removed from the game.`;
 
 /*
   === CharacterStats ===
@@ -32,12 +32,16 @@ function GameObject(attributes) {
 */
 
 function CharacterStats(health) {
+  GameObject.call(this, health);
   this.healthPoints= health.healthPoints;
-  this.takeDamage= function(damage) {
-    return ${this.name} took damage, ${this.destroy}.
   }
-}
 
+
+CharacterStats.prototype = Object.create(GameObject.prototype);
+
+CharacterStats.prototype.takeDamage = function() {
+  return `${this.name} took damage, ${this.destroy}.`;
+};
 
 /*
   === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -50,15 +54,17 @@ function CharacterStats(health) {
 */
 
 function Humanoid(attributes) {
-  this.team= attributes.team;
+  CharacterStats.call(this, attributes)
+  this.team= attributes.team
   this.weapons= attributes.weapons;
   this.language= attributes.language;
-  this.greet= function(greet) {
-    return ${this.name} offers a greeting in ${this.language}.
   }
-  console.log (this.destroy);
-  console.log (this.takeDamage);
-}
+
+  Humanoid.prototype= Object.create(CharacterStats.prototype);
+
+  Humanoid.prototype= function() {
+    return `${this.name} offers a greeting in ${this.language}.`;
+  };
 
  
 /*
@@ -130,7 +136,7 @@ function Humanoid(attributes) {
   console.log(archer.greet()); // Lilith offers a greeting in Elvish.
   console.log(mage.takeDamage()); // Bruce took damage.
   console.log(swordsman.destroy()); // Sir Mustachio was removed from the game.
-*/
+
 
   // Stretch task: 
   // * Create Villain and Hero constructor functions that inherit from the Humanoid constructor function.  
